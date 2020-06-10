@@ -1,5 +1,6 @@
-import { Arg, Query, Resolver } from "type-graphql";
+import { Arg, Query, Resolver, Mutation } from "type-graphql";
 import { Thumbnail } from "./thumbnail";
+import { ThumbnailInput } from "./input";
 
 
 @Resolver(of => Thumbnail)
@@ -16,12 +17,18 @@ export class ThumbnailResolver {
     }];
 
     @Query(returns => Thumbnail, { nullable: true })
-    async getThumbnail(@Arg('id') id: number): Promise<Thumbnail | undefined> {
-        return await this.items.find(item => item.id === id);
+    async get(@Arg('id') id: number): Promise<Thumbnail | undefined> {
+        return this.items.find(item => item.id === id);
     }
 
     @Query(returns => [Thumbnail])
-    async getThumbnails(): Promise<Thumbnail[]> {
-        return await this.items;
+    async getAll(): Promise<Thumbnail[]> {
+        return this.items;
+    }
+
+    @Mutation(returns => Thumbnail)
+    async add(@Arg("objects") input: ThumbnailInput) {
+        // console.log(input)
+        return this.items[0]
     }
 }
