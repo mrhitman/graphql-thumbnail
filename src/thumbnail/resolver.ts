@@ -1,12 +1,14 @@
-import { Arg, Query, Resolver, Mutation } from "type-graphql";
-import { Thumbnail } from "./thumbnail";
+import { plainToClass } from "class-transformer";
+import nanoid from "nanoid";
+import { Arg, Mutation, Query, Resolver } from "type-graphql";
 import { ThumbnailInput } from "./input";
+import { Thumbnail } from "./thumbnail";
 
 
 @Resolver(of => Thumbnail)
 export class ThumbnailResolver {
     private readonly items: Thumbnail[] = [{
-        id: 1,
+        id: '1',
         website: 'sadasd',
         status: 'asda',
         urls: {
@@ -17,18 +19,25 @@ export class ThumbnailResolver {
     }];
 
     @Query(returns => Thumbnail, { nullable: true })
-    async get(@Arg('id') id: number): Promise<Thumbnail | undefined> {
+    async getThumbnail(@Arg('id') id: string) {
         return this.items.find(item => item.id === id);
     }
 
     @Query(returns => [Thumbnail])
-    async getAll(): Promise<Thumbnail[]> {
+    async getThumbnails() {
         return this.items;
     }
 
     @Mutation(returns => Thumbnail)
-    async add(@Arg("objects") input: ThumbnailInput) {
-        // console.log(input)
-        return this.items[0]
+    async addThumbnail(@Arg("objects") input: ThumbnailInput) {
+        const newItem = plainToClass(Thumbnail, {
+            ...input,
+            id: nanoid.nanoid(),
+            status: 'processing',
+            created_at: Math.floor((+new Date()) / 1000)
+        });
+
+        this.items.push(newItem);
+        return newItem;
     }
 }

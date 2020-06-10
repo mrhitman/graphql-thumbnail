@@ -5,7 +5,7 @@ import { Urls } from "./urls";
 @ObjectType()
 export class Thumbnail {
     @Field(() => ID)
-    id: number;
+    id: string;
 
     @Field({ description: 'url' })
     @IsUrl()
