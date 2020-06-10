@@ -1,0 +1,15 @@
+{
+  "name": "consciousgrowth-nodejs-victorvarenic",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/x1challenge/consciousgrowth-nodejs-victorvarenic.git",
+  "author": "Varenik Victor <kabalx47@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "jest": "^26.0.1",
+    "typescript": "^3.9.5"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.4"
+  }
+}
