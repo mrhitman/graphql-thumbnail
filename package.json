@@ -12,6 +12,9 @@
     "start:dev": "ts-node-dev --cls --watch -- src/server.ts"
   },
   "dependencies": {
+    "apollo-server-koa": "^2.14.3",
+    "class-transformer": "^0.2.3",
+    "class-validator": "^0.12.2",
     "dotenv": "^8.2.0",
     "graphql": "^15.1.0",
     "jest": "^26.0.1",
@@ -21,8 +24,11 @@
     "koa-json": "^2.0.2",
     "koa-morgan": "^1.0.1",
     "koa-router": "^9.0.1",
+    "puppeteer": "^3.3.0",
+    "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "ts-node-dev": "^1.0.0-pre.44",
+    "type-graphql": "^1.0.0-rc.2",
     "typescript": "^3.9.5"
   },
   "devDependencies": {
