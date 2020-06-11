@@ -1,4 +1,13 @@
-version: "3.2"
+version: '3.2'
 services:
   api:
     build: .
+  minio:
+    image: minio/minio
+    volumes:
+      - ./data:/data
+    ports:
+      - 9000:9000
+    environment:
+      - MINIO_ACCESS_KEY=
+      - MINIO_SECRET_KEY=

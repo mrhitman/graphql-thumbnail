@@ -1,7 +1,7 @@
-import { Field, InputType } from "type-graphql";
+import { Field, InputType } from 'type-graphql';
 
 @InputType()
 export class ThumbnailInput {
-    @Field()
-    website: string;
+  @Field()
+  website: string;
 }

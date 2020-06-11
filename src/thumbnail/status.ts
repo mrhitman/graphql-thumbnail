@@ -1,11 +1,11 @@
-import { registerEnumType } from "type-graphql";
+import { registerEnumType } from 'type-graphql';
 
 export enum Status {
-    processing,
-    completed,
-    failed,
+  processing,
+  completed,
+  failed,
 }
 
 registerEnumType(Status, {
-    name: "Status",
+  name: 'Status',
 });
