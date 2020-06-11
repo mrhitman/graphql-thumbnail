@@ -26,12 +26,19 @@ export class ThumbnailService {
             status: Status.processing,
             created_at: Math.floor((+new Date()) / 1000)
         });
-        const hostname = await this.getSiteScreen(input.website);
-        newItem.urls = {
-            _256: 'http://localhost:3000/' + hostname + '_256.png',
-            _512: 'http://localhost:3000/' + hostname + '_512.png',
-        };
-        newItem.status = Status.completed;
+        try {
+            const hostname = await this.getSiteScreen(input.website);
+            newItem.urls = {
+                _256: 'http://localhost:3000/' + hostname + '_256.png',
+                _512: 'http://localhost:3000/' + hostname + '_512.png',
+            };
+            newItem.status = Status.completed;
+        } catch (e) {
+            newItem.status = Status.failed;
+            newItem.error_code = 404;
+            newItem.error_message = e.message;
+        }
+
         this.items.push(newItem);
         return newItem;
     }
