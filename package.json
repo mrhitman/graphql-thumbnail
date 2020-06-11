@@ -17,6 +17,7 @@
     "class-validator": "^0.12.2",
     "dotenv": "^8.2.0",
     "graphql": "^15.1.0",
+    "graphql-subscriptions": "^1.1.0",
     "jest": "^26.0.1",
     "koa": "^2.12.0",
     "koa-bodyparser": "^4.3.0",
@@ -24,10 +25,12 @@
     "koa-json": "^2.0.2",
     "koa-morgan": "^1.0.1",
     "koa-router": "^9.0.1",
+    "koa-static": "^5.0.0",
     "nanoid": "^3.1.9",
     "puppeteer": "^3.3.0",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
+    "sharp": "^0.25.3",
     "ts-node-dev": "^1.0.0-pre.44",
     "type-graphql": "^1.0.0-rc.2",
     "typescript": "^3.9.5"
@@ -38,7 +41,10 @@
     "@types/koa-bodyparser": "^4.3.0",
     "@types/koa-helmet": "^5.2.0",
     "@types/koa-morgan": "^1.0.4",
+    "@types/koa-static": "^4.0.1",
     "@types/nanoid": "^2.1.0",
-    "@types/node": "^14.0.13"
+    "@types/node": "^14.0.13",
+    "@types/puppeteer": "^3.0.0",
+    "@types/sharp": "^0.25.0"
   }
 }

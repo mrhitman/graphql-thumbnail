@@ -1,44 +1,30 @@
-import { plainToClass } from "class-transformer";
-import nanoid from "nanoid";
 import { Arg, Mutation, Query, Resolver } from "type-graphql";
 import { ThumbnailInput } from "./input";
+import { ThumbnailService } from "./service";
 import { Thumbnail } from "./thumbnail";
-import { Status } from "./status";
 
 
 @Resolver(of => Thumbnail)
 export class ThumbnailResolver {
-    private readonly items: Thumbnail[] = [{
-        id: '1',
-        website: 'sadasd',
-        status: Status.completed,
-        urls: {
-            _256: 'asdasd',
-            _512: 'asdasd'
-        },
-        created_at: 1323
-    }];
+    protected service: ThumbnailService;
+
+    constructor() {
+        this.service = new ThumbnailService();
+    }
+
 
     @Query(returns => Thumbnail, { nullable: true })
     async thumbnail(@Arg('id') id: string) {
-        return this.items.find(item => item.id === id);
+        return this.service.get(id);
     }
 
     @Query(returns => [Thumbnail])
     async thumbnails() {
-        return this.items;
+        return this.service.getAll();
     }
 
-    @Mutation(returns => Thumbnail)
-    async insert_thumbnail(@Arg("objects") input: ThumbnailInput) {
-        const newItem = plainToClass(Thumbnail, {
-            ...input,
-            id: nanoid.nanoid(),
-            status: Status.processing,
-            created_at: Math.floor((+new Date()) / 1000)
-        });
-
-        this.items.push(newItem);
-        return newItem;
+    @Mutation(returns => Thumbnail, { name: 'insert_thumbnail' })
+    async insertThumbnail(@Arg("objects") input: ThumbnailInput) {
+        return this.service.add(input);
     }
 }

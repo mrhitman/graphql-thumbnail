@@ -4,6 +4,7 @@ import Koa from 'koa';
 import bodyparser from 'koa-bodyparser';
 import helmet from 'koa-helmet';
 import logger from 'koa-morgan';
+import serve from 'koa-static';
 import "reflect-metadata";
 import { buildSchemaSync } from 'type-graphql';
 import { ThumbnailResolver } from './thumbnail/resolver';
@@ -19,6 +20,7 @@ export function createApp() {
     app.use(helmet());
     app.use(bodyparser());
     app.use(logger('dev'));
+    app.use(serve('storage'));
     server.applyMiddleware({ app });
     app.use(ctx => {
         ctx.body = new Date();

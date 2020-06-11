@@ -8,14 +8,14 @@ export class Thumbnail {
     @Field(type => ID)
     id: string;
 
-    @Field({ description: 'url' })
     @IsUrl()
+    @Field({ description: 'url in format protocol://domain.tld' })
     website: string;
 
     @Field(type => Status)
     status: Status;
 
-    @Field(type => Int)
+    @Field(type => Int, { description: 'unix timestamp' })
     created_at: number;
 
     @Field(type => Urls)
