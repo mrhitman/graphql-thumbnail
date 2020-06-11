@@ -33,8 +33,7 @@ if (!module.parent) {
 
   const app = createApp();
   const port = process.env.PORT || 5000;
-  const host = process.env.HOST || 'http://localhost';
   app.listen(port, () => {
-    global.console.log(`Server UP on ${host}:${port}/graphql`);
+    global.console.log(`Server UP on http://localhost:${port}/graphql`);
   });
 }
