@@ -34,11 +34,7 @@ export class ThumbnailService {
     });
 
     try {
-      const { _256, _512 } = await this.getSiteScreen(input.website);
-      newItem.urls = {
-        _256: `${process.env.HOST}:${process.env.PORT}/${_256}`,
-        _512: `${process.env.HOST}:${process.env.PORT}/${_512}`,
-      };
+      newItem.urls = await this.getSiteScreen(input.website);
       newItem.status = Status.completed;
     } catch (e) {
       newItem.status = Status.failed;
@@ -63,50 +59,36 @@ export class ThumbnailService {
     const page = await browser.newPage();
     await page.goto(url);
     const buffer = await page.screenshot({ fullPage: true });
-    const _512 = Buffer.from(url + '_512').toString('base64') + '.png';
-    const _256 = Buffer.from(url + '_256').toString('base64') + '.png';
-    await Promise.all([
+    const _512name = Buffer.from(url + '_512').toString('base64') + '.png';
+    const _256name = Buffer.from(url + '_256').toString('base64') + '.png';
+    const [buff512, buff256] = await Promise.all([
       sharp(buffer)
         .resize({ width: 512, height: 512 })
         .png()
-        .toFile(resolve('storage', _512)),
+        .toBuffer(),
       sharp(buffer)
         .resize({ width: 256, height: 256 })
         .png()
-        .toFile(resolve('storage', _256)),
+        .toBuffer()
     ]);
-    try {
-      await this.mini(resolve('storage', _256));
-    } catch (e) {
-      console.log(e);
-    }
+    const [_512, _256] = await Promise.all([
+      this.save(buff512, _512name),
+      this.save(buff256, _256name)
+    ]);
     await browser.close();
-    return { _256, _512 };
+    return { _512, _256 }
   }
 
-  protected async mini(file: string) {
-    return new Promise((res, rej) => {
-      minio.makeBucket('europetrip', 'us-east-1', function (err) {
-        if (err) return rej(err);
+  protected async save(file: Buffer, name: string) {
+    const bucket = process.env.MINIO_BUCKET!;
+    const isExists = await minio.bucketExists(bucket);
 
-        console.log('Bucket created successfully in "us-east-1".');
+    if (!isExists) {
+      await minio.makeBucket(bucket, 'us-east-1');
+    }
 
-        const metaData = {
-          'Content-Type': 'application/octet-stream',
-          'X-Amz-Meta-Testing': 1234,
-          example: 5678,
-        };
-
-        minio.fPutObject('europetrip', 'test.png', file, metaData, function (
-          err,
-          etag
-        ) {
-          if (err) return rej(err);
-
-          res();
-          console.log('File uploaded successfully.');
-        });
-      });
-    });
+    const metaData = { 'Content-Type': 'image/png' };
+    await minio.putObject(bucket, name, file, metaData);
+    return minio.presignedUrl('GET', bucket, name);
   }
 }
