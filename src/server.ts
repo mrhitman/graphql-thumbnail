@@ -7,6 +7,7 @@ import logger from 'koa-morgan';
 import serve from 'koa-static';
 import 'reflect-metadata';
 import { buildSchemaSync } from 'type-graphql';
+import errorHandler from './error-handler';
 import { ThumbnailResolver } from './thumbnail';
 
 export function createApp() {
@@ -22,6 +23,7 @@ export function createApp() {
   app.use(logger('dev'));
   app.use(serve('storage'));
   server.applyMiddleware({ app });
+  app.use(errorHandler);
   app.use((ctx) => {
     ctx.body = new Date();
   });

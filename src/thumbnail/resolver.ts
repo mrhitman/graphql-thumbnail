@@ -1,7 +1,7 @@
 import { Arg, Mutation, Query, Resolver } from 'type-graphql';
-import { ThumbnailInput } from './input';
+import { ThumbnailInput } from './inputs/input';
 import { ThumbnailService } from './service';
-import { Thumbnail } from './thumbnail';
+import { Thumbnail } from './types/thumbnail';
 
 @Resolver((of) => Thumbnail)
 export class ThumbnailResolver {

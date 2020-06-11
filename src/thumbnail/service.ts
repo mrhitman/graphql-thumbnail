@@ -1,8 +1,8 @@
 import { plainToClass } from 'class-transformer';
 import nanoid from 'nanoid';
-import { ThumbnailInput } from './input';
-import { Status } from './status';
-import { Thumbnail } from './thumbnail';
+import { ThumbnailInput } from './inputs/input';
+import { Status } from './types/status';
+import { Thumbnail } from './types/thumbnail';
 import puppeteer from 'puppeteer';
 import { resolve } from 'path';
 import sharp from 'sharp';
@@ -26,6 +26,7 @@ export class ThumbnailService {
       status: Status.processing,
       created_at: Math.floor(+new Date() / 1000),
     });
+
     try {
       const hostname = await this.getSiteScreen(input.website);
       newItem.urls = {
@@ -35,7 +36,16 @@ export class ThumbnailService {
       newItem.status = Status.completed;
     } catch (e) {
       newItem.status = Status.failed;
-      newItem.error_code = 404;
+      switch (e.name) {
+        case 'TypeError':
+          newItem.error_code = 400;
+          break;
+        case 'Error':
+          newItem.error_code = 404;
+          break;
+        default:
+          newItem.error_code = 500;
+      }
       newItem.error_message = e.message;
     }
 

@@ -15,7 +15,7 @@ export class Thumbnail {
   @Field((type) => Status)
   status: Status;
 
-  @Field((type) => Int, { description: 'unix timestamp' })
+  @Field((type) => Int)
   created_at: number;
 
   @Field((type) => Urls, { nullable: true })
