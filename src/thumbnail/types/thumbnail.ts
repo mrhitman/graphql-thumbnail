@@ -1,7 +1,7 @@
-import { IsUrl } from 'class-validator';
-import { Field, ID, Int, ObjectType } from 'type-graphql';
-import { Status } from './status';
-import { Urls } from './urls';
+import { IsUrl } from "class-validator";
+import { Field, ID, Int, ObjectType } from "type-graphql";
+import { Status } from "./status";
+import { Urls } from "./urls";
 
 @ObjectType()
 export class Thumbnail {
@@ -9,7 +9,7 @@ export class Thumbnail {
   id: string;
 
   @IsUrl()
-  @Field({ description: 'url in format protocol://domain.tld' })
+  @Field({ description: "url in format protocol://domain.tld" })
   website: string;
 
   @Field((type) => Status)

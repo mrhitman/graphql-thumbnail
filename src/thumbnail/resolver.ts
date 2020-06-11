@@ -1,7 +1,7 @@
-import { Arg, Mutation, Query, Resolver } from 'type-graphql';
-import { ThumbnailInput } from './inputs/input';
-import { ThumbnailService } from './service';
-import { Thumbnail } from './types/thumbnail';
+import { Arg, Mutation, Query, Resolver } from "type-graphql";
+import { ThumbnailInput } from "./inputs/input";
+import { ThumbnailService } from "./service";
+import { Thumbnail } from "./types/thumbnail";
 
 @Resolver((of) => Thumbnail)
 export class ThumbnailResolver {
@@ -12,17 +12,17 @@ export class ThumbnailResolver {
   }
 
   @Query((returns) => Thumbnail, { nullable: true })
-  async thumbnail(@Arg('id') id: string) {
+  public async thumbnail(@Arg("id") id: string) {
     return this.service.get(id);
   }
 
   @Query((returns) => [Thumbnail])
-  async thumbnails() {
+  public async thumbnails() {
     return this.service.getAll();
   }
 
-  @Mutation((returns) => Thumbnail, { name: 'insert_thumbnail' })
-  async insertThumbnail(@Arg('objects') input: ThumbnailInput) {
+  @Mutation((returns) => Thumbnail, { name: "insert_thumbnail" })
+  public async insertThumbnail(@Arg("objects") input: ThumbnailInput) {
     return this.service.add(input);
   }
 }
