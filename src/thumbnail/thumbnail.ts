@@ -1,28 +1,29 @@
-import { Field, ID, ObjectType, Int } from "type-graphql";
 import { IsUrl } from "class-validator";
+import { Field, ID, Int, ObjectType } from "type-graphql";
+import { Status } from "./status";
 import { Urls } from "./urls";
 
 @ObjectType()
 export class Thumbnail {
-    @Field(() => ID)
+    @Field(type => ID)
     id: string;
 
     @Field({ description: 'url' })
     @IsUrl()
     website: string;
 
-    @Field()
-    status: string;
+    @Field(type => Status)
+    status: Status;
 
-    @Field(() => Int)
+    @Field(type => Int)
     created_at: number;
 
-    @Field(() => Urls)
+    @Field(type => Urls)
     urls: Urls;
 
     @Field({ nullable: true })
     error_message?: string;
 
-    @Field(() => Int, { nullable: true })
+    @Field(type => Int, { nullable: true })
     error_code?: number;
 }

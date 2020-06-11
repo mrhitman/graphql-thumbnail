@@ -3,6 +3,7 @@ import nanoid from "nanoid";
 import { Arg, Mutation, Query, Resolver } from "type-graphql";
 import { ThumbnailInput } from "./input";
 import { Thumbnail } from "./thumbnail";
+import { Status } from "./status";
 
 
 @Resolver(of => Thumbnail)
@@ -10,7 +11,7 @@ export class ThumbnailResolver {
     private readonly items: Thumbnail[] = [{
         id: '1',
         website: 'sadasd',
-        status: 'asda',
+        status: Status.completed,
         urls: {
             _256: 'asdasd',
             _512: 'asdasd'
@@ -33,7 +34,7 @@ export class ThumbnailResolver {
         const newItem = plainToClass(Thumbnail, {
             ...input,
             id: nanoid.nanoid(),
-            status: 'processing',
+            status: Status.processing,
             created_at: Math.floor((+new Date()) / 1000)
         });
 
