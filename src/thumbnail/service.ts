@@ -63,8 +63,14 @@ export class ThumbnailService {
     const _512 = Buffer.from(url + '_512').toString('base64') + '.png';
     const _256 = Buffer.from(url + '_256').toString('base64') + '.png';
     await Promise.all([
-      sharp(buffer).resize(512).png().toFile(resolve('storage', _512)),
-      sharp(buffer).resize(256).png().toFile(resolve('storage', _256)),
+      sharp(buffer)
+        .resize({ width: 512, height: 512 })
+        .png()
+        .toFile(resolve('storage', _512)),
+      sharp(buffer)
+        .resize({ width: 256, height: 256 })
+        .png()
+        .toFile(resolve('storage', _256)),
     ]);
     await browser.close();
     return { _256, _512 };
