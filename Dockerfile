@@ -22,7 +22,6 @@ COPY package.json package.json
 COPY yarn.lock yarn.lock
 COPY tsconfig.json tsconfig.json
 RUN yarn install
-RUN yarn build
 
 EXPOSE 5000
 CMD yarn start

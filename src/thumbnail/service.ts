@@ -56,7 +56,7 @@ export class ThumbnailService {
   protected async getSiteScreen(url: string) {
     const hostname = new URL(url).hostname.split('.').join('_');
     const browser = await puppeteer.launch({
-      ignoreDefaultArgs: ['--disable-extensions', '--disable-dev-shm-usage'],
+      args: ['--no-sandbox', '--headless', '--disable-gpu'],
     });
     const page = await browser.newPage();
     await page.goto(url);
