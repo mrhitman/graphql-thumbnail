@@ -55,7 +55,9 @@ export class ThumbnailService {
 
   protected async getSiteScreen(url: string) {
     const hostname = new URL(url).hostname.split('.').join('_');
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({
+      ignoreDefaultArgs: ['--disable-extensions', '--disable-dev-shm-usage'],
+    });
     const page = await browser.newPage();
     await page.goto(url);
     const buffer = await page.screenshot({ fullPage: true });

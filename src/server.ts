@@ -7,8 +7,8 @@ import logger from 'koa-morgan';
 import serve from 'koa-static';
 import 'reflect-metadata';
 import { buildSchemaSync } from 'type-graphql';
-import errorHandler from './error-handler';
 import { ThumbnailResolver } from './thumbnail';
+import errorHandler from './error-handler';
 
 export function createApp() {
   const schema = buildSchemaSync({
@@ -34,7 +34,7 @@ if (!module.parent) {
   dotenv.config();
 
   const app = createApp();
-  const port = process.env.PORT || 3000;
+  const port = process.env.PORT || 5000;
   app.listen(port, () => {
     global.console.log(`Server UP ${port}`);
   });
