@@ -20,17 +20,17 @@ export class ThumbnailResolver {
     }];
 
     @Query(returns => Thumbnail, { nullable: true })
-    async getThumbnail(@Arg('id') id: string) {
+    async thumbnail(@Arg('id') id: string) {
         return this.items.find(item => item.id === id);
     }
 
     @Query(returns => [Thumbnail])
-    async getThumbnails() {
+    async thumbnails() {
         return this.items;
     }
 
     @Mutation(returns => Thumbnail)
-    async addThumbnail(@Arg("objects") input: ThumbnailInput) {
+    async insert_thumbnail(@Arg("objects") input: ThumbnailInput) {
         const newItem = plainToClass(Thumbnail, {
             ...input,
             id: nanoid.nanoid(),
