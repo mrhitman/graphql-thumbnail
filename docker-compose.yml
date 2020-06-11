@@ -1,18 +1,16 @@
 version: '3.2'
 services:
-  server:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - '${PORT}:5000'
-    env_file: .env
-  # minio:
-  #   image: minio/minio
-  #   volumes:
-  #     - ./data:/data
+  # server:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
   #   ports:
-  #     - 9000:9000
-  #   environment:
-  #     - MINIO_ACCESS_KEY=
-  #     - MINIO_SECRET_KEY=
+  #     - '${PORT}:5000'
+  #   env_file: .env
+  minio:
+    image: minio/minio
+    volumes:
+      - ./data:/data
+    command: server /data
+    ports:
+      - 9000:9000
