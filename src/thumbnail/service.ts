@@ -1,11 +1,11 @@
-import { plainToClass } from "class-transformer";
-import nanoid from "nanoid";
-import puppeteer from "puppeteer";
-import sharp from "sharp";
-import minio from "../minio";
-import { ThumbnailInput } from "./inputs/input";
-import { Status } from "./types/status";
-import { Thumbnail } from "./types/thumbnail";
+import { plainToClass } from 'class-transformer';
+import nanoid from 'nanoid';
+import puppeteer from 'puppeteer';
+import sharp from 'sharp';
+import minio from '../minio';
+import { ThumbnailInput } from './inputs/input';
+import { Status } from './types/status';
+import { Thumbnail } from './types/thumbnail';
 
 enum ErrorCode {
   INVALID_URL,
@@ -34,38 +34,37 @@ export class ThumbnailService {
 
     this.items.push(newItem);
     return newItem;
-
   }
 
-  public async processItem(newItem: Thumbnail) {
+  public async processItem(id: string) {
+    const item = await this.get(id);
+    if (!item) return;
+
     try {
-      newItem.urls = await this.getSiteScreen(newItem.website);
-      newItem.status = Status.completed;
+      item.urls = await this.getSiteScreen(item.website);
+      item.status = Status.completed;
     } catch (e) {
-      newItem.status = Status.failed;
+      item.status = Status.failed;
       switch (e.name) {
-        case "TypeError":
-          newItem.error_code = ErrorCode.INVALID_URL;
+        case 'TypeError':
+          item.error_code = ErrorCode.INVALID_URL;
           break;
         default:
-          newItem.error_code = ErrorCode.UNKNOWN;
+          item.error_code = ErrorCode.UNKNOWN;
       }
-      newItem.error_message = e.message;
+      item.error_message = e.message;
     }
-
-    this.items = this.items.map(item => item.id === item.id ? newItem : item);
-    return newItem;
   }
 
   protected async getSiteScreen(url: string) {
     const browser = await puppeteer.launch({
-      args: ["--no-sandbox", "--headless", "--disable-gpu"],
+      args: ['--no-sandbox', '--headless', '--disable-gpu'],
     });
     const page = await browser.newPage();
     await page.goto(url);
     const buffer = await page.screenshot({ fullPage: true });
-    const _512file = Buffer.from(url + "_512").toString("base64") + ".png";
-    const _256file = Buffer.from(url + "_256").toString("base64") + ".png";
+    const _512file = Buffer.from(url + '_512').toString('base64') + '.png';
+    const _256file = Buffer.from(url + '_256').toString('base64') + '.png';
     const buff512 = await sharp(buffer)
       .resize({ width: 512, height: 512 })
       .png()
@@ -85,11 +84,11 @@ export class ThumbnailService {
     const isExists = await minio.bucketExists(bucket);
 
     if (!isExists) {
-      await minio.makeBucket(bucket, "us-east-1");
+      await minio.makeBucket(bucket, 'us-east-1');
     }
 
-    const metaData = { "Content-Type": "image/png" };
+    const metaData = { 'Content-Type': 'image/png' };
     await minio.putObject(bucket, name, file, metaData);
-    return minio.presignedUrl("GET", bucket, name);
+    return minio.presignedUrl('GET', bucket, name);
   }
 }

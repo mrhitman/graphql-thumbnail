@@ -7,10 +7,10 @@ import {
   PubSub,
   Root,
   PubSubEngine,
-} from "type-graphql";
-import { ThumbnailInput } from "./inputs/input";
-import { ThumbnailService } from "./service";
-import { Thumbnail } from "./types/thumbnail";
+} from 'type-graphql';
+import { ThumbnailInput } from './inputs/input';
+import { ThumbnailService } from './service';
+import { Thumbnail } from './types/thumbnail';
 
 @Resolver((of) => Thumbnail)
 export class ThumbnailResolver {
@@ -21,7 +21,7 @@ export class ThumbnailResolver {
   }
 
   @Query((returns) => Thumbnail, { nullable: true })
-  public async thumbnail(@Arg("id") id: string) {
+  public async thumbnail(@Arg('id') id: string) {
     return this.service.get(id);
   }
 
@@ -30,20 +30,22 @@ export class ThumbnailResolver {
     return this.service.getAll();
   }
 
-  @Mutation((returns) => Thumbnail, { name: "insert_thumbnail" })
+  @Mutation((returns) => Thumbnail, { name: 'insert_thumbnail' })
   public async insertThumbnail(
-    @Arg("objects") input: ThumbnailInput,
+    @Arg('objects') input: ThumbnailInput,
     @PubSub() pubSub: PubSubEngine
   ) {
-
     const item = await this.service.add(input);
-    await pubSub.publish("NewThumbnail", item.id);
-    await this.service.processItem(item);
-    await pubSub.publish("NewThumbnail", item.id);
+    await pubSub.publish('NewThumbnail', item.id);
+    await this.service.processItem(item.id);
+    await pubSub.publish('NewThumbnail', item.id);
     return item;
   }
 
-  @Subscription((returns) => Thumbnail, { topics: "NewThumbnail", name: "insert_thumbnail" })
+  @Subscription((returns) => Thumbnail, {
+    topics: 'NewThumbnail',
+    name: 'insert_thumbnail',
+  })
   public async onNewThumbnail(@Root() id: string) {
     return this.service.get(id);
   }
