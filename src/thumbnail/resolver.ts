@@ -1,4 +1,13 @@
-import { Arg, Mutation, Query, Resolver } from "type-graphql";
+import {
+  Arg,
+  Mutation,
+  Query,
+  Resolver,
+  Subscription,
+  PubSub,
+  Root,
+  PubSubEngine,
+} from "type-graphql";
 import { ThumbnailInput } from "./inputs/input";
 import { ThumbnailService } from "./service";
 import { Thumbnail } from "./types/thumbnail";
@@ -22,7 +31,17 @@ export class ThumbnailResolver {
   }
 
   @Mutation((returns) => Thumbnail, { name: "insert_thumbnail" })
-  public async insertThumbnail(@Arg("objects") input: ThumbnailInput) {
-    return this.service.add(input);
+  public async insertThumbnail(
+    @Arg("objects") input: ThumbnailInput,
+    @PubSub() pubSub: PubSubEngine
+  ) {
+    const item = await this.service.add(input);
+    await pubSub.publish("NewItem", item.id);
+    return item;
+  }
+
+  @Subscription((returns) => Thumbnail, { topics: "NewItem" })
+  public async normalSubscription(@Root() payload: string) {
+    return this.service.get(payload);
   }
 }
