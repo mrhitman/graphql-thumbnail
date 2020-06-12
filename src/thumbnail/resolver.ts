@@ -35,13 +35,16 @@ export class ThumbnailResolver {
     @Arg("objects") input: ThumbnailInput,
     @PubSub() pubSub: PubSubEngine
   ) {
+
     const item = await this.service.add(input);
-    await pubSub.publish("NewItem", item.id);
+    await pubSub.publish("NewThumbnail", item.id);
+    await this.service.processItem(item);
+    await pubSub.publish("NewThumbnail", item.id);
     return item;
   }
 
-  @Subscription((returns) => Thumbnail, { topics: "NewItem" })
-  public async normalSubscription(@Root() payload: string) {
-    return this.service.get(payload);
+  @Subscription((returns) => Thumbnail, { topics: "NewThumbnail", name: "insert_thumbnail" })
+  public async onNewThumbnail(@Root() id: string) {
+    return this.service.get(id);
   }
 }

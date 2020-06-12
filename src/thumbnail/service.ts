@@ -13,7 +13,7 @@ enum ErrorCode {
 }
 
 export class ThumbnailService {
-  private readonly items: Thumbnail[] = [];
+  private items: Thumbnail[] = [];
 
   public getAll() {
     return this.items;
@@ -32,8 +32,14 @@ export class ThumbnailService {
       created_at: Math.floor(+new Date() / 1000),
     });
 
+    this.items.push(newItem);
+    return newItem;
+
+  }
+
+  public async processItem(newItem: Thumbnail) {
     try {
-      newItem.urls = await this.getSiteScreen(input.website);
+      newItem.urls = await this.getSiteScreen(newItem.website);
       newItem.status = Status.completed;
     } catch (e) {
       newItem.status = Status.failed;
@@ -47,7 +53,7 @@ export class ThumbnailService {
       newItem.error_message = e.message;
     }
 
-    this.items.push(newItem);
+    this.items = this.items.map(item => item.id === item.id ? newItem : item);
     return newItem;
   }
 
@@ -58,8 +64,8 @@ export class ThumbnailService {
     const page = await browser.newPage();
     await page.goto(url);
     const buffer = await page.screenshot({ fullPage: true });
-    const _512name = Buffer.from(url + "_512").toString("base64") + ".png";
-    const _256name = Buffer.from(url + "_256").toString("base64") + ".png";
+    const _512file = Buffer.from(url + "_512").toString("base64") + ".png";
+    const _256file = Buffer.from(url + "_256").toString("base64") + ".png";
     const buff512 = await sharp(buffer)
       .resize({ width: 512, height: 512 })
       .png()
@@ -68,10 +74,10 @@ export class ThumbnailService {
       .resize({ width: 256, height: 256 })
       .png()
       .toBuffer();
-    const _512 = await this.save(buff512, _512name);
-    const _256 = await this.save(buff256, _256name);
+    const _512link = await this.save(buff512, _512file);
+    const _256link = await this.save(buff256, _256file);
     await browser.close();
-    return { _512, _256 };
+    return { _512: _512link, _256: _256link };
   }
 
   protected async save(file: Buffer, name: string) {
