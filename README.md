@@ -69,7 +69,7 @@ mutation addThumbnails($website: String) {
 - DB usage is not mandatory
 - [Puppeteer](https://pptr.dev/) is your friend.
 
-# Installation help info
+## Installation help info
 
 ```
 	// for local env
